@@ -15,34 +15,16 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Android SDK Tools
-        uses: android-actions/setup-android@v3
-
-      - name: Compile App Elements
+      - name: Install Gradle System Engine
         run: |
-          # 1. Create structure and move Java file
-          mkdir -p com/mysite/tvapp
-          cp MainActivity.java com/mysite/tvapp/
-          
-          # 2. Compile Java using the exact platform library path
-          javac -cp $ANDROID_HOME/platforms/android-34/android.jar -d . com/mysite/tvapp/MainActivity.java
-          
-          # 3. Corrected d8 compilation syntax for Ubuntu cloud runner
-          $ANDROID_HOME/build-tools/34.0.0/d8 --output . com/mysite/tvapp/MainActivity.class
-          
-          # 4. Package resources into the APK layout structure
-          $ANDROID_HOME/build-tools/34.0.0/aapt package -f -M AndroidManifest.xml -I $ANDROID_HOME/platforms/android-34/android.jar -F unsigned.apk
-          
-          # 5. Inject the bytecode into the archive
-          zip -g unsigned.apk classes.dex
+          sudo apt-get update
+          sudo apt-get install -y gradle
 
-      - name: Sign APK Pack
-        run: |
-          keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-          $ANDROID_HOME/build-tools/34.0.0/apksigner sign --ks debug.keystore --ks-pass pass:android --out tv_app.apk unsigned.apk
+      - name: Build Standalone TV APK
+        run: gradle assembleDebug
 
       - name: Upload Finished TV APK
         uses: actions/upload-artifact@v4
         with:
           name: Android-TV-APK
-          path: tv_app.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
