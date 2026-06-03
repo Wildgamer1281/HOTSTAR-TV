@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        myWebView.loadUrl("https://yourwebsite.com");
+        myWebView.loadUrl("https://www.hotstar.com");
     }
 
     @Override
