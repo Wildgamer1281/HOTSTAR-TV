@@ -20,16 +20,20 @@ jobs:
 
       - name: Compile App Elements
         run: |
+          # 1. Create structure and move Java file
           mkdir -p com/mysite/tvapp
-          mv MainActivity.java com/mysite/tvapp/
+          cp MainActivity.java com/mysite/tvapp/
           
-          # Compile using official cloud Android SDK structures
+          # 2. Compile Java using the exact platform library path
           javac -cp $ANDROID_HOME/platforms/android-34/android.jar -d . com/mysite/tvapp/MainActivity.java
-          $ANDROID_HOME/build-tools/34.0.0/d8 --output classes.jar com/mysite/tvapp/MainActivity.class
-          jar xf classes.jar classes.dex
           
-          # Bundle resources into APK layout structure
+          # 3. Corrected d8 compilation syntax for Ubuntu cloud runner
+          $ANDROID_HOME/build-tools/34.0.0/d8 --output . com/mysite/tvapp/MainActivity.class
+          
+          # 4. Package resources into the APK layout structure
           $ANDROID_HOME/build-tools/34.0.0/aapt package -f -M AndroidManifest.xml -I $ANDROID_HOME/platforms/android-34/android.jar -F unsigned.apk
+          
+          # 5. Inject the bytecode into the archive
           zip -g unsigned.apk classes.dex
 
       - name: Sign APK Pack
