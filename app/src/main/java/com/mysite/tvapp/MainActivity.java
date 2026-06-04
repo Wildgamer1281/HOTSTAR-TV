@@ -18,27 +18,26 @@ public class MainActivity extends Activity {
         myWebView = new WebView(this);
         setContentView(myWebView);
 
-        // Crucial for TVs: Enable hardware layer acceleration to stop rendering freezes
+        // Forces low-end TV processors to use hardware graphics acceleration to stop loading locks
         myWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        webSettings.setAppCacheEnabled(true);
-        webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
         webSettings.setDomStorageEnabled(true);
         webSettings.setDatabaseEnabled(true);
         webSettings.setMediaPlaybackRequiresUserGesture(false);
         
-        // Fix: Spoof a standard Windows Desktop Chrome browser identity
-        // This stops streaming firewalls from blocking your TV app engine connection
-        webSettings.setUserAgentString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+        // Spoof a clean iPad User-Agent. This forces Hotstar to send its lightest layout, 
+        // bypassing heavy DRM check scripts that freeze budget Android TVs.
+        webSettings.setUserAgentString("Mozilla/5.0 (iPad; CPU OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/605.1.15");
 
         myWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 
-                // Inject our bright yellow D-pad focus framework
+                // Active App-Side Injection: Forces a 6px Yellow Border around focused elements 
+                // and maps the TV Remote Arrow Keys to jump across elements smoothly.
                 String remoteScript = "javascript:(function() { " +
                     "  if (window.tvRemoteInitialized) return; " +
                     "  window.tvRemoteInitialized = true; " +
@@ -46,7 +45,7 @@ public class MainActivity extends Activity {
                     "  style.innerHTML = '*:focus { outline: 6px solid #FFD700 !important; outline-offset: 2px !important; background-color: rgba(255,215,0,0.1) !important; }'; " +
                     "  document.head.appendChild(style); " +
                     "  window.addEventListener('keydown', function(e) { " +
-                    "    const elements = document.querySelectorAll('a, button, [tabindex=\"0\"], video, .card, .video-thumb'); " +
+                    "    const elements = document.querySelectorAll('a, button, [tabindex=\"0\"], video, .card, .video-thumb, [role=\"button\"]'); " +
                     "    let index = Array.prototype.indexOf.call(elements, document.activeElement); " +
                     "    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { " +
                     "      if (index < elements.length - 1) elements[index + 1].focus(); " +
@@ -59,8 +58,8 @@ public class MainActivity extends Activity {
             }
         });
 
-        // Double check your target streaming website address is correct here!
-        myWebView.loadUrl("https://m.hotstar.com"); 
+        // Direct lightweight mobile link to bypass desktop loading traps
+        myWebView.loadUrl("https://www.hotstar.com/in/home"); 
     }
 
     @Override
