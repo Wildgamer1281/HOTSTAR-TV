@@ -23,6 +23,8 @@ public class MainActivity extends Activity {
 
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
         webSettings.setDomStorageEnabled(true);
         webSettings.setDatabaseEnabled(true);
         webSettings.setMediaPlaybackRequiresUserGesture(false);
@@ -58,7 +60,7 @@ public class MainActivity extends Activity {
         });
 
         // Double check your target streaming website address is correct here!
-        myWebView.loadUrl("https://www.hotstar.com/in/home"); 
+        myWebView.loadUrl("https://m.hotstar.com"); 
     }
 
     @Override
