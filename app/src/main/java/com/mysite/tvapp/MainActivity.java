@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
         });
 
         // Direct lightweight mobile link to bypass desktop loading traps
-        myWebView.loadUrl("https://www.hotstar.com/in/explore"); 
+        myWebView.loadUrl("https://www.primevideo.com"); 
     }
 
     @Override
