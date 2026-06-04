@@ -27,8 +27,8 @@ public class MainActivity extends Activity {
         webSettings.setDatabaseEnabled(true);
         webSettings.setMediaPlaybackRequiresUserGesture(false);
         
-        // Spoof a clean iPad User-Agent. This forces Hotstar to send its lightest layout, 
-        // bypassing heavy DRM check scripts that freeze budget Android TVs.
+        // Spoof a clean iPad User-Agent. This forces the lightweight layout, 
+        // bypassing heavy scripts that freeze budget Android TVs.
         webSettings.setUserAgentString("Mozilla/5.0 (iPad; CPU OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/605.1.15");
 
         myWebView.setWebViewClient(new WebViewClient() {
@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
         });
 
         // Direct lightweight mobile link to bypass desktop loading traps
-        myWebView.loadUrl("https://www.hotstar.com/in/home"); 
+        myWebView.loadUrl("https://www.hotstar.com/in/explore"); 
     }
 
     @Override
