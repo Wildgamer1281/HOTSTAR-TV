@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
         });
 
         // Double check your target streaming website address is correct here!
-        myWebView.loadUrl("https://yourwebsite.com"); 
+        myWebView.loadUrl("https://www.hotstar.com/in/home"); 
     }
 
     @Override
