@@ -15,10 +15,10 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Gradle Engine
-        uses: gradle/gradle-build-action@v3
+      - name: Setup Official Gradle Actions Environment
+        uses: gradle/actions/setup-gradle@v3
 
-      - name: Build Standalone TV APK
+      - name: Build Production TV APK
         run: gradle assembleDebug
 
       - name: Upload Finished TV APK
