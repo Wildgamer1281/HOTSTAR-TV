@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
         myWebView = new WebView(this);
         setContentView(myWebView);
 
-        // Turn on hardware graphics acceleration to ensure smooth page scrolling on low-end TVs
+        // Hardware acceleration to keep low-end TV processors from freezing
         myWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         WebSettings webSettings = myWebView.getSettings();
@@ -27,25 +27,31 @@ public class MainActivity extends Activity {
         webSettings.setDatabaseEnabled(true);
         webSettings.setMediaPlaybackRequiresUserGesture(false);
         
-        // Spoof an iPad browser identity. Amazon serves its cleanest, most memory-efficient 
-        // layout to tablets, which helps low-end TV processors load everything instantly.
+        // iPad User-Agent layout instruction to fetch the lighter tablet layout
         webSettings.setUserAgentString("Mozilla/5.0 (iPad; CPU OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/605.1.15");
 
         myWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                
-                // Inject our custom TV Remote D-Pad Navigation and the bright Yellow Highlight frame
-                String remoteScript = "javascript:(function() { " +
+                injectRemoteScript();
+            }
+        });
+
+        myWebView.loadUrl("https://www.primevideo.com"); 
+    }
+
+    private void injectRemoteScript() {
+        // Structured carefully to avoid string concatenation compiler breaks on GitHub actions
+        String js = "javascript:(function() { " +
                     "  if (window.tvRemoteInitialized) return; " +
                     "  window.tvRemoteInitialized = true; " +
-                    "  const style = document.createElement('style'); " +
+                    "  var style = document.createElement('style'); " +
                     "  style.innerHTML = '*:focus { outline: 6px solid #FFD700 !important; outline-offset: 2px !important; background-color: rgba(255,215,0,0.1) !important; }'; " +
                     "  document.head.appendChild(style); " +
                     "  window.addEventListener('keydown', function(e) { " +
-                    "    const elements = document.querySelectorAll('a, button, [tabindex=\"0\"], video, [role=\"button\"], .pv-content-item, .tst-hover-container'); " +
-                    "    let index = Array.prototype.indexOf.call(elements, document.activeElement); " +
+                    "    var elements = document.querySelectorAll('a, button, [tabindex=\"0\"], video, [role=\"button\"], .pv-content-item, .tst-hover-container'); " +
+                    "    var index = Array.prototype.indexOf.call(elements, document.activeElement); " +
                     "    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { " +
                     "      if (index < elements.length - 1) elements[index + 1].focus(); " +
                     "    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { " +
@@ -53,12 +59,7 @@ public class MainActivity extends Activity {
                     "    } " +
                     "  }); " +
                     "})()";
-                myWebView.loadUrl(remoteScript);
-            }
-        });
-
-        // Load the Prime Video Global Login/Home Portal
-        myWebView.loadUrl("https://www.primevideo.com"); 
+        myWebView.loadUrl(js);
     }
 
     @Override
