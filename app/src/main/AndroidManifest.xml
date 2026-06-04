@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mysite.tvapp">
+    package="com.mysite.tvbdapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application 
-        android:label="JIO HOTSTAR" 
+        android:label="PRIME VIDEO" 
         android:icon="@drawable/ic_launcher"
         android:banner="@drawable/tv_banner"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
